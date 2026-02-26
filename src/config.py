@@ -15,3 +15,5 @@ DB_LOCATION = Path(os.getenv("PROJECT_DB_LOCATION", DEFAULT_DB))
 #setx PROJECT_DB_LOCATION "C:\absolute\path\to\dataset.csv"
 
 
+CAP_MEETS_SINCE_BOMBOUT = 999
+
