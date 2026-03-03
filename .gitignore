@@ -6,3 +6,5 @@ notebooks/later.ipynb
 notebooks/project_ideas.txt
 data/cleaned_f.csv
 data/cleaned_m.csv
+data/cleaned_df.csv
+data/panel_data.csv
