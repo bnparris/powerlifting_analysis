@@ -1,8 +1,9 @@
 .ipynb_checkpoints/
-data/dataset.csv
-data/LICENSE.txt
-data/README.txt
+data/
 notebooks/later.ipynb
 notebooks/project_ideas.txt
-data/cleaned.csv
-data/panel_data.csv
+notebooks/lightgbm.ipynb
+notebooks/select_from_model.ipynb
+notebooks/02_eda3.ipynb
+models/
+
