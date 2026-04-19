@@ -76,16 +76,11 @@ using only information available up to the end of that year to prevent leakage.
 | Feature | Description |
 |---|---|
 | `TimeSinceLastPBYearEnd` | Days since the lifter last set a personal best, measured at year end |
-| `NumberOfMeets` | Number of meets competed in that year |
+| `BestGoodliftOfYear` | Best Goodlift points achieved across all meets that year |
+| `ImprovementGradientWithinYear` | Rate of improvement in total between first and last meet of the year |
 | `Age` | Lifter age at time of last meet of the year |
-| `Goodlift` | Goodlift points at last meet of the year |
 | `AvgMeetsPerYear` | Expanding mean of meets per year up to and including the current year |
 | `Sex` | Encoded as 0 (F), 1 (M), 2 (Mx) |
-| `ImprovementGradientBetweenYears` | Rate of change in best total between the current and previous year |
-| `ImprovementAcceleration` | Rate of change of the meet-to-meet improvement gradient |
-| `TimeCompetingYearEnd` | Days between the lifter's first ever competition and year end |
-| `AverageAttemptsMade` | Mean number of valid attempts per meet across the year |
-| `ImprovementGradientTwoMeets` | Rate of improvement in total between the last two meets |
 
 ### Feature Construction Notes
 - **Improvement features**: both absolute and percentage-based versions were 
@@ -94,6 +89,9 @@ using only information available up to the end of that year to prevent leakage.
 - **Attempt imputation**: where individual attempt data was absent but the 
   lifter did not bomb out, `AttemptsMade` was imputed using the mean of 
   non-bombing lifters
+- **Age imputation**: a binary `AgeMissing` indicator was added before imputing 
+  missing `Age` values with the median for that year, to allow the model to 
+  learn from the missingness pattern while avoiding leakage
 - **Weight class and federation** were considered but did not survive feature 
   selection
 
@@ -140,7 +138,7 @@ metric could be substituted with this information.
    with negative importance were removed
 2. Remaining features were added incrementally in order of importance and 
    validation accuracy was tracked
-3. The feature count maximising validation accuracy was selected (11 features)
+3. The feature count maximising validation accuracy was selected (6 features)
 
 ## Results
 Key metrics and findings.
