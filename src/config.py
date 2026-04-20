@@ -17,4 +17,18 @@ DB_LOCATION = Path(os.getenv("PROJECT_DB_LOCATION", DEFAULT_DB))
 
 CAP_MEETS_SINCE_BOMBOUT = 999
 
+FEATURES = [
+    'TimeSinceLastPBYearEnd',
+    'ImprovementGradientWithinYear',
+    'BestGoodliftOfYear',
+    'Age',
+    'AvgMeetsPerYear'
+]
 
+FINAL_PARAMS = {
+    'learning_rate': 0.01,
+    'max_iter': 750,
+    'max_depth': 2,
+    'min_samples_leaf': 5,
+    'l2_regularization': 0.05
+}

@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-
+from datetime import datetime
 
 COLUMNS = [
     'Name', 'Date', 'Sex', 'Age', 'MeetName', 'Federation', 'Division',
@@ -10,8 +10,9 @@ COLUMNS = [
     'Deadlift2Kg', 'Deadlift3Kg', 'TotalKg', 'Goodlift', 'Sanctioned'
 ]
 
+current_year = datetime.now().year
 OLD_STRUCT_YEARS = [2015, 2016, 2017, 2018, 2019, 2020]
-NEW_STRUCT_YEARS = [2021, 2022, 2023, 2024, 2025]
+NEW_STRUCT_YEARS = list(range(2021, current_year + 1))
 ALL_YEARS = OLD_STRUCT_YEARS + NEW_STRUCT_YEARS
 
 F_OLD_CLASSES = ['43', '47', '52', '57', '63', '72', '84', '84+']
@@ -24,7 +25,7 @@ def reduce_columns(df):
     return df[COLUMNS].copy()
 
 
-def normalise_strings(df: pd.DataFrame) -> pd.DataFrame:
+def normalise_strings(df):
     """strip whitespace and lowercase string columns."""
     df = df.copy()
     for col in ['Name', 'MeetName', 'Federation', 'Equipment']:
@@ -49,13 +50,13 @@ def filter_entries(df):
 
 
 def filter_years(df):
-    """Filter for 2015-2025 inclusive."""
+    """Filter for 2015-2025 (inclusive)"""
     return df.loc[df['Year'].isin(ALL_YEARS)].copy()
 
 
 def clean_female_weight_classes(df):
     """
-    Filter female entries to valid weight classes for relevant year.
+    filter female entries to valid weight classes for relevant year.
     IPF restructured female weight classes between 2020 and 2021:
         Pre-2021: includes 72kg, excludes 69kg and 76kg
         Post-2021: includes 69kg and 76kg, excludes 72kg
@@ -71,7 +72,7 @@ def clean_female_weight_classes(df):
 def clean_male_weight_classes(df):
     """
     Filter male entries to valid IPF weight classes.
-    Male weight classes have been stable across the 2015-2025 period.
+    Male weight classes were the same 2015 onwards.
     """
     m = df.loc[df['Sex'] == 'M'].copy()
     m_cleaned = m.loc[m['WeightClassKg'].isin(M_CLASSES)]
@@ -95,7 +96,7 @@ def clean_mx_weight_classes(df, f_cleaned, m_cleaned):
 
 def clean(df):
     """
-    Full cleaning pipeline. Takes raw OpenPowerlifting dataframe and returns
+    Full cleaning pipeline. Takes OpenPowerlifting dataframe and returns
     cleaned dataframe of sanctioned, raw, full power (SBD) entries from 2015-2025
     with valid IPF weight classes, and a broader full history dataframe used
     for feature engineering lookups e.g. pre-2015 PBs, TimeCompeting.
@@ -107,6 +108,8 @@ def clean(df):
         cleaned: Filtered dataframe for model training.
         full_history: Dataframe across all years for feature engineering lookups.
     """
+    df = reduce_columns(df)
+    df = normalise_strings(df)
     full_history = filter_entries(df)
     filtered = filter_years(full_history)
 
@@ -116,7 +119,6 @@ def clean(df):
 
     cleaned = pd.concat([f_cleaned, m_cleaned, mx_cleaned], ignore_index=True)
     return cleaned, full_history
-
 
 
 
