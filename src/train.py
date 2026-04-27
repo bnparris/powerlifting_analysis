@@ -4,20 +4,23 @@ from sklearn.ensemble import HistGradientBoostingClassifier
 
 import sys
 from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parent))
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 import config
 from cleaning import clean
 from feature_engineering import build_panel_data
+from datetime import datetime
+import json
 
 
 def train():
     df = pd.read_csv(config.DB_LOCATION)
-    # clean and build panel data
+    print('Building panel data')
     cleaned, full_history = clean(df)
+    panel_data, last_complete_year = build_panel_data(cleaned, full_history)
+    panel_data.to_csv(config.PRODUCTION_PANEL, index = False)
 
-    panel_data = build_panel_data(cleaned, full_history)
-
-    # train on all available data
+    #train on all available data
+    print('Training model')
     train_X = panel_data[config.FEATURES]
     train_y = panel_data['Churns']
 
@@ -32,7 +35,20 @@ def train():
 
     clf.fit(train_X, train_y)
 
-    joblib.dump(clf, config.PROJECT_ROOT / 'models' / 'model.pkl')
+    joblib.dump(clf, config.MODEL_PATH)
+
+
+    metadata = {
+    'trained_on': datetime.now().strftime('%d-%m-%Y %H:%M:%S'),
+    'last_complete_year': last_complete_year,
+    'n_training_samples': len(train_y),
+    'features': config.FEATURES,
+    'params': config.FINAL_PARAMS
+    }
+    
+    with open(config.METADATA_PATH, 'w') as file:
+        json.dump(metadata, file, indent=2)
+        
     print('Model saved.')
 
 

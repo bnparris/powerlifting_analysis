@@ -1,4 +1,4 @@
-#testing churn target as only unit test because it's so central to project want to verify correctness
+#testing churn target as it's so central to project want to verify correctness
 
 import pandas as pd
 from datetime import datetime

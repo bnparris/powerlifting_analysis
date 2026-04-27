@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 
+
 COLUMNS = [
     'Name', 'Date', 'Sex', 'Age', 'MeetName', 'Federation', 'Division',
     'BodyweightKg', 'WeightClassKg', 'Best3SquatKg', 'Best3BenchKg',

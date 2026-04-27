@@ -1,7 +1,13 @@
 import pandas as pd
 import numpy as np
 from datetime import datetime
+
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 import config
+
+
 
 CUTOFF_DATE = pd.Timestamp('2015-01-01')
 
@@ -132,7 +138,7 @@ def add_churn_target(panel_data, last_complete_year = None):
 
     panel_data = panel_data[panel_data['Year'] <= last_complete_year]
 
-    return panel_data
+    return panel_data, last_complete_year
 
 
 def impute_age(panel_data, age_median):
@@ -166,8 +172,8 @@ def build_panel_data(cleaned, full_history):
     df_sorted = add_goodlift_features(df_sorted)
 
     panel_data = to_panel_data(df_sorted)
-    panel_data = add_churn_target(panel_data)
+    panel_data, last_complete_year = add_churn_target(panel_data)
     panel_data = impute_age(panel_data, panel_data['Age'].median())
     panel_data = select_columns(panel_data)
 
-    return panel_data
+    return panel_data, last_complete_year
