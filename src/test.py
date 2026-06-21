@@ -17,7 +17,7 @@ def test_churn_target():
         {'Name': 'ria patel', 'Year': 2024}, # 2024 should be dropped as specified by last_complete_year
     ])
 
-    result = add_churn_target(panel_data, last_complete_year=2023)
+    result, _ = add_churn_target(panel_data, last_complete_year=2023)
 
     assert result.loc[(result['Name'] == 'daniel chen') & (result['Year'] == 2021), 'Churns'].item() == 0
     assert result.loc[(result['Name'] == 'daniel chen') & (result['Year'] == 2022), 'Churns'].item() == 0
